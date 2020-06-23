@@ -1,0 +1,40 @@
+<div class="container-fluid	">
+	<div class="box-heading">
+		<h4> Box Image</h4>
+	</div>
+	<div class="row">
+		<div class="col-md-2" *ngFor="let item of divCollection; let i = index">
+			<div class="item-box">
+				<div class="item-image" *ngIf="item.showImage; else noImageBlock">
+					<img class="img img-fluid" [src]="imgUrl">
+				</div>
+				<ng-template #noImageBlock>
+					<div class="item-image">
+						<img class="img img-fluid" src="assets/images/default.png">
+					</div>
+				  </ng-template>
+				<div class="text-center">
+					<button class="btn btn-success mr-2" (click)="loadImage(i)">View</button>
+					<button class="btn btn-danger" (click)="openConfirm(deleteImageModal, i)">Delete</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Delete Image Modal -->
+<ng-template #deleteImageModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+		<p class="w-100"> Are you sure, you want to delete the image?</p>
+    </div>
+    <div class="footer-btns">
+        <button class="btn btn-success" (click)="deletImage()">Yes</button>
+        <a class="btn btn-primary" (click)="closeModal()">Close</a>
+    </div>
+</ng-template>
