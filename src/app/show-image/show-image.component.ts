@@ -101,7 +101,19 @@ export class ShowImageComponent implements OnInit {
    */
   showIndexImg(index: number, url: string) {
     this.divCollection[index].showImage = true;
-    this.divCollection[index].url = url;
+	this.divCollection[index].url = url;
+	return true;
+  }
+
+  /**
+   * @description method to hide Indexd Imgage
+   * @param { index } number
+   * @returns void
+   * @author Hari Om
+   */
+  hideIndexImg(index: number) {
+    this.divCollection[index].showImage = false;
+    this.divCollection[index].url = null;
   }
 
   /**
@@ -115,7 +127,13 @@ export class ShowImageComponent implements OnInit {
       (img, imgIndex) => imgIndex === this.currentIndex
     );
     if (imgUrl && imgUrl != null && imgUrl != undefined) {
-      this.imgCollection.splice(this.currentIndex, 1);
+	  this.imgCollection.splice(this.currentIndex, 1);
+	  for (let i = this.currentIndex; i < this.imgCollection.length; i++) {
+		  console.log('i', i)
+		this.showIndexImg(i, this.imgCollection[i]);
+	  }
+	  const indexToHide = this.currentIndex === 5 ? 5: this.imgCollection.length;
+	  this.hideIndexImg(indexToHide);
     } else {
       this.toastr.error("Image is not available for this div");
     }
@@ -136,10 +154,10 @@ export class ShowImageComponent implements OnInit {
       windowClass: "dark-modal",
     };
     this.modelRef = this.modalService.open(content, ngbModalOptions);
-    this.divCollection = this.divCollection.filter((ele) => {
-      ele.showImage = false;
-      return true;
-    });
+    // this.divCollection = this.divCollection.filter((ele) => {
+    //   ele.showImage = false;
+    //   return true;
+    // });
     this.currentIndex = index;
   }
 
