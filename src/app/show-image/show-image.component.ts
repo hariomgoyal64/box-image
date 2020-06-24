@@ -16,20 +16,24 @@ export class ShowImageComponent implements OnInit {
    * local reference for divCollection
    */
   divCollection: DivCollection[] = [
-    { name: "One", value: 1, showImage: false },
-    { name: "Two", value: 2, showImage: false },
-    { name: "Three", value: 3, showImage: false },
-    { name: "Four", value: 4, showImage: false },
-    { name: "Five", value: 5, showImage: false },
-    { name: "Six", value: 6, showImage: false },
+    { name: "One", value: 1, showImage: false, url: null },
+    { name: "Two", value: 2, showImage: false, url: null },
+    { name: "Three", value: 3, showImage: false, url: null },
+    { name: "Four", value: 4, showImage: false, url: null },
+    { name: "Five", value: 5, showImage: false, url: null },
+    { name: "Six", value: 6, showImage: false, url: null },
   ];
 
   /**
    * local reference for imgCollection
    */
-  imgCollection: { url: string, index: number }[] = [
-	  { url: "assets/images/no-data.png", index: 0 },
-	  { url: "assets/images/no-data.png", index: 3 },
+  imgCollection = [
+	"assets/images/one.jpeg",
+	"assets/images/two.jpeg",
+	"assets/images/three.jpeg",
+	"assets/images/four.jpeg",
+	"assets/images/five.jpeg",
+	"assets/images/six.jpeg",
 	];
 
   /**
@@ -48,11 +52,6 @@ export class ShowImageComponent implements OnInit {
   currentIndex: number;
 
   /**
-   * local reference for imgUrl
-   */
-  imgUrl: string;
-
-  /**
    * @constuct class constructor
    *
    * @param NgbModal modalService
@@ -67,9 +66,7 @@ export class ShowImageComponent implements OnInit {
    * @params none
    * @returns void
    */
-  ngOnInit(): void {
-    // console.log("data", this.divArray);
-  }
+  ngOnInit(): void { }
 
   /**
    * @description method to load image corresponding to button click
@@ -78,13 +75,20 @@ export class ShowImageComponent implements OnInit {
    * @author null
    */
   loadImage(index: number): void {
-	const imgObj = this.imgCollection.find(img => img.index === index);
-	if (imgObj && imgObj != null && imgObj != undefined) {
-		this.showIndexImg(index, imgObj.url);
-	} else {
-		const lesserIndexImg = this.imgCollection.reverse().find(img => img.index < index);
-		if (lesserIndexImg && lesserIndexImg != null && lesserIndexImg != undefined) {
-			this.showIndexImg(lesserIndexImg.index, lesserIndexImg.url);
+	const actualIndex = this.divCollection.findIndex((ele, eleIndex) => {
+		if (ele.showImage === false && index >= eleIndex) {
+			return true;
+		}
+		return false;
+	});
+	console.log('actual', actualIndex);
+	if (actualIndex != undefined && actualIndex != null && actualIndex > -1) {
+		if (this.imgCollection.length === this.divCollection.length) {
+			this.showIndexImg(actualIndex, this.imgCollection[actualIndex]);
+		} else if (typeof this.imgCollection[actualIndex] != 'undefined') {
+			this.showIndexImg(actualIndex, this.imgCollection[actualIndex]);
+		} else {
+			this.toastr.error('Image not found for this box');
 		}
 	}
   }
@@ -96,15 +100,8 @@ export class ShowImageComponent implements OnInit {
    * @author null
    */
   showIndexImg(index: number, url: string) {
-	this.divCollection = this.divCollection.filter((ele, eleIndex) => {
-		if (eleIndex != index) {
-			ele.showImage = false;
-		} else if (eleIndex === index) {
-			ele.showImage = true;
-		}
-		return ele;
-	});
-	this.imgUrl = url;
+	this.divCollection[index].showImage = true;
+	this.divCollection[index].url = url;
   }
 
   /**
@@ -114,15 +111,9 @@ export class ShowImageComponent implements OnInit {
    * @author null
    */
   deletImage(): void {
-	const imgObj = this.imgCollection.find(img => img.index === this.currentIndex);
-	this.divCollection = this.divCollection.filter(ele => {
-		ele.showImage = false;
-		return ele;
-	});
-
-	if (imgObj && imgObj != null && imgObj != undefined) {
-		this.imgCollection = this.imgCollection.filter(obj => obj.index != this.currentIndex);
-		this.toastr.success('Image has been deleted successfully');
+	const imgUrl = this.imgCollection.find((img, imgIndex) => imgIndex === this.currentIndex);
+	if (imgUrl && imgUrl != null && imgUrl != undefined) {
+		this.imgCollection.splice(this.currentIndex, 1);
 	} else {
 		this.toastr.error('Image is not available for this div');
 	}
@@ -143,6 +134,10 @@ export class ShowImageComponent implements OnInit {
       windowClass: 'dark-modal',
     };
 	this.modelRef = this.modalService.open(content, ngbModalOptions);
+	this.divCollection = this.divCollection.filter(ele => {
+		ele.showImage = false;
+		return true;
+	});
 	this.currentIndex = index;
   }
 

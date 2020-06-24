@@ -6,11 +6,11 @@
 		<div class="col-md-2" *ngFor="let item of divCollection; let i = index">
 			<div class="item-box">
 				<div class="item-image" *ngIf="item.showImage; else noImageBlock">
-					<img class="img img-fluid" [src]="imgUrl">
+					<img class="img img-fluid" [src]="item.url">
 				</div>
 				<ng-template #noImageBlock>
 					<div class="item-image">
-						<img class="img img-fluid" src="assets/images/default.png">
+						<img #viewBtn class="img img-fluid" src="assets/images/default.png">
 					</div>
 				  </ng-template>
 				<div class="text-center">
