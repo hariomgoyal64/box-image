@@ -28,13 +28,13 @@ export class ShowImageComponent implements OnInit {
    * local reference for imgCollection
    */
   imgCollection = [
-	"assets/images/one.jpeg",
-	"assets/images/two.jpeg",
-	"assets/images/three.jpeg",
-	"assets/images/four.jpeg",
-	"assets/images/five.jpeg",
-	"assets/images/six.jpeg",
-	];
+    "assets/images/one.jpeg",
+    "assets/images/two.jpeg",
+    "assets/images/three.jpeg",
+    "assets/images/four.jpeg",
+    "assets/images/five.jpeg",
+    "assets/images/six.jpeg",
+  ];
 
   /**
    * local reference for deleteImageModal
@@ -56,68 +56,70 @@ export class ShowImageComponent implements OnInit {
    *
    * @param NgbModal modalService
    * @param toastr ToastrService
+   * @author Hari Om
    */
-  constructor(private modalService: NgbModal,
-	private toastr: ToastrService) {}
+  constructor(private modalService: NgbModal, private toastr: ToastrService) {}
 
   /**
    * On component load
    *
    * @params none
    * @returns void
+   * @author Hari Om
    */
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   /**
    * @description method to load image corresponding to button click
    * @param { index } number
    * @returns void
-   * @author null
+   * @author Hari Om
    */
   loadImage(index: number): void {
-	const actualIndex = this.divCollection.findIndex((ele, eleIndex) => {
-		if (ele.showImage === false && index >= eleIndex) {
-			return true;
-		}
-		return false;
-	});
-	console.log('actual', actualIndex);
-	if (actualIndex != undefined && actualIndex != null && actualIndex > -1) {
-		if (this.imgCollection.length === this.divCollection.length) {
-			this.showIndexImg(actualIndex, this.imgCollection[actualIndex]);
-		} else if (typeof this.imgCollection[actualIndex] != 'undefined') {
-			this.showIndexImg(actualIndex, this.imgCollection[actualIndex]);
-		} else {
-			this.toastr.error('Image not found for this box');
-		}
-	}
+    const actualIndex = this.divCollection.findIndex((ele, eleIndex) => {
+      if (ele.showImage === false && index >= eleIndex) {
+        return true;
+      }
+      return false;
+    });
+    if (actualIndex != undefined && actualIndex != null && actualIndex > -1) {
+      if (this.imgCollection.length === this.divCollection.length) {
+        this.showIndexImg(actualIndex, this.imgCollection[actualIndex]);
+      } else if (typeof this.imgCollection[actualIndex] != "undefined") {
+        this.showIndexImg(actualIndex, this.imgCollection[actualIndex]);
+      } else {
+        this.toastr.error("Image not found for this box");
+      }
+    }
   }
 
-   /**
+  /**
    * @description method to show Indexd Imgage
    * @param { index, url } number, string
    * @returns void
-   * @author null
+   * @author Hari Om
    */
   showIndexImg(index: number, url: string) {
-	this.divCollection[index].showImage = true;
-	this.divCollection[index].url = url;
+    this.divCollection[index].showImage = true;
+    this.divCollection[index].url = url;
   }
 
   /**
    * @description method to delete image corresponding to button click
    * @param none
    * @returns void
-   * @author null
+   * @author Hari Om
    */
   deletImage(): void {
-	const imgUrl = this.imgCollection.find((img, imgIndex) => imgIndex === this.currentIndex);
-	if (imgUrl && imgUrl != null && imgUrl != undefined) {
-		this.imgCollection.splice(this.currentIndex, 1);
-	} else {
-		this.toastr.error('Image is not available for this div');
-	}
-	this.closeModal();
+    const imgUrl = this.imgCollection.find(
+      (img, imgIndex) => imgIndex === this.currentIndex
+    );
+    if (imgUrl && imgUrl != null && imgUrl != undefined) {
+      this.imgCollection.splice(this.currentIndex, 1);
+    } else {
+      this.toastr.error("Image is not available for this div");
+    }
+    this.closeModal();
   }
 
   /**
@@ -125,27 +127,27 @@ export class ShowImageComponent implements OnInit {
    * @param content: TemplateRef <NgbModal>
    * @param { index } number
    * @returns none
-   * @author null
+   * @author Hari Om
    */
   openConfirm(content: TemplateRef<NgbModal>, index: number): void {
     const ngbModalOptions: NgbModalOptions = {
-      backdrop: 'static',
+      backdrop: "static",
       keyboard: false,
-      windowClass: 'dark-modal',
+      windowClass: "dark-modal",
     };
-	this.modelRef = this.modalService.open(content, ngbModalOptions);
-	this.divCollection = this.divCollection.filter(ele => {
-		ele.showImage = false;
-		return true;
-	});
-	this.currentIndex = index;
+    this.modelRef = this.modalService.open(content, ngbModalOptions);
+    this.divCollection = this.divCollection.filter((ele) => {
+      ele.showImage = false;
+      return true;
+    });
+    this.currentIndex = index;
   }
 
   /**
    * @description To close the open modal
    * @param content: TemplateRef <NgbModal>
    * @returns none
-   * @author null
+   * @author Hari Om
    */
   closeModal(): void {
     this.modelRef.close();
